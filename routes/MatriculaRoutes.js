@@ -22,7 +22,7 @@ router.post("/matricula/registrar", verifyToken,
 );
 router.get('/matricula/buscar/:numeroDocumento', verifyToken, buscarDatosRenovacion);
 router.get("/matricula/listar", verifyToken, listarMatriculas);
-router.get("/matricula/:id", verifyToken, obtenerDetalleMatricula);
+router.get("/matricula/detalle/:id", verifyToken, obtenerDetalleMatricula);
 router.put("/matricula/estado/:id", verifyToken, alternarEstadoMatricula);
 
 module.exports = router;

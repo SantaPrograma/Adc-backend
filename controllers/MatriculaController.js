@@ -256,7 +256,7 @@ const obtenerDetalleMatricula = async (req, res) => {
     const matricula = await Matricula.findOne({
       where: { id },
       include: [
-        { model: Nino },
+        { model: Nino, as: "nino" },
         { model: MadrePadre, as: "madre" },
         { model: MadrePadre, as: "padre" },
         { model: Apoderado, as: "apoderado" }
@@ -267,19 +267,19 @@ const obtenerDetalleMatricula = async (req, res) => {
       return res.status(404).json({ error: "Matrícula no encontrada" });
     }
 
-    const nino = matricula.Nino;
+    const nino = matricula.nino; // <-- corregido
     const baseUrl = `${req.protocol}://${req.get("host")}`;
 
-    const copiaDniUrl = nino.copiaDni ? `${baseUrl}/uploads/ninos/${nino.copiaDni}` : null;
-    const partidaNacimientoUrl = nino.partidaNacimiento ? `${baseUrl}/uploads/ninos/${nino.partidaNacimiento}` : null;
+    const copiaDniUrl = nino?.copiaDni ? `${baseUrl}/uploads/ninos/${nino.copiaDni}` : null;
+    const partidaNacimientoUrl = nino?.partidaNacimiento ? `${baseUrl}/uploads/ninos/${nino.partidaNacimiento}` : null;
 
     const formatFecha = (fecha) =>
       fecha ? new Date(fecha).toISOString().split("T")[0] : null;
 
     res.json({
       nino: {
-        ...nino.toJSON(),
-        fechaNacimiento: formatFecha(nino.fechaNacimiento),
+        ...nino?.toJSON(),
+        fechaNacimiento: formatFecha(nino?.fechaNacimiento),
         copiaDniUrl,
         partidaNacimientoUrl
       },
@@ -297,7 +297,7 @@ const obtenerDetalleMatricula = async (req, res) => {
       },
       estado: matricula.estado,
       duracion: matricula.duracion_matricula,
-      creadaEn: formatFecha(matricula.created_at)
+      creadaEn: formatFecha(matricula.fecha_registro) // <-- `createdAt` renombrado como `fecha_registro`
     });
   } catch (error) {
     console.error("Error al obtener detalle de matrícula:", error);
