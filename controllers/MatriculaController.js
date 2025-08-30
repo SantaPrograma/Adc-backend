@@ -145,7 +145,7 @@ const buscarDatosRenovacion = async (req, res) => {
     // 2. Buscar su matrícula más reciente
     const matricula = await Matricula.findOne({
       where: { nino_id: nino.id },
-      order: [["created_at", "DESC"]],
+      order: [["fecha_registro", "DESC"]],
       include: [
         { model: MadrePadre, as: "madre" },
         { model: MadrePadre, as: "padre" },
